@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO Meta Tags -->
+    <title>AI Background Remover - 100% Free & Private Local Image Background Remover</title>
+    <meta name="description" content="Remove image backgrounds instantly in your browser. Powered by local AI, no image uploads to servers, 100% private, free and unlimited." />
+    <meta name="keywords" content="background remover, remove bg, transparent background, AI background removal, private image editor, webassembly bg remover" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="AI Background Remover - 100% Free & Private" />
+    <meta property="og:description" content="Remove image backgrounds instantly in your browser. Powered by local AI, 100% private, free and unlimited." />
+    <meta property="og:type" content="website" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app">
+      <!-- Background Decorative Blobs -->
+      <div class="bg-glow bg-glow-1"></div>
+      <div class="bg-glow bg-glow-2"></div>
+
+      <header class="app-header">
+        <div class="header-content">
+          <div class="logo-area">
+            <div class="logo-icon">
+              <i data-lucide="sparkles"></i>
+            </div>
+            <h1>ClearCut <span class="gradient-text">AI</span></h1>
+          </div>
+          <div class="badge-status">
+            <span class="status-dot"></span>
+            <span>100% Offline & Private</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="app-main">
+        <div class="app-container">
+          
+          <!-- Introduction Section -->
+          <section class="intro-section">
+            <h2 class="hero-title">Remove Image Backgrounds <br><span class="gradient-text-alt">Instantly & Locally</span></h2>
+            <p class="hero-subtitle">No uploads to servers. Your privacy is guaranteed. Powered by WebAssembly and local AI running entirely on your browser.</p>
+          </section>
+
+          <!-- Workspace Section -->
+          <div class="workspace-card">
+            
+            <!-- Side Controls Panel (initially collapsed / empty state) -->
+            <aside id="controls-panel" class="controls-panel hidden">
+              <div class="panel-section">
+                <h3><i data-lucide="sliders"></i> Adjustment Controls</h3>
+                
+                <!-- Background Type Selection -->
+                <div class="control-group">
+                  <label class="control-label">Background Mode</label>
+                  <div class="toggle-buttons">
+                    <button type="button" id="bg-mode-transparent" class="toggle-btn active" data-mode="transparent">
+                      <i data-lucide="grid"></i> Transparent
+                    </button>
+                    <button type="button" id="bg-mode-color" class="toggle-btn" data-mode="color">
+                      <i data-lucide="palette"></i> Solid Color
+                    </button>
+                    <button type="button" id="bg-mode-image" class="toggle-btn" data-mode="image">
+                      <i data-lucide="image"></i> Custom BG
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Background Color Choice (visible in Solid Color mode) -->
+                <div id="color-settings" class="control-subgroup hidden">
+                  <label class="control-label">Background Color</label>
+                  <div class="color-preset-container">
+                    <button type="button" class="color-preset" style="background-color: #ffffff;" data-color="#ffffff" title="White"></button>
+                    <button type="button" class="color-preset" style="background-color: #000000;" data-color="#000000" title="Black"></button>
+                    <button type="button" class="color-preset" style="background-color: #3b82f6;" data-color="#3b82f6" title="Blue"></button>
+                    <button type="button" class="color-preset" style="background-color: #ef4444;" data-color="#ef4444" title="Red"></button>
+                    <button type="button" class="color-preset" style="background-color: #10b981;" data-color="#10b981" title="Green"></button>
+                    <button type="button" class="color-preset" style="background-color: #f59e0b;" data-color="#f59e0b" title="Yellow"></button>
+                    <div class="custom-color-picker-wrapper">
+                      <input type="color" id="custom-color-picker" value="#ffffff" />
+                      <i data-lucide="plus" class="picker-plus"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Custom Background Image Choice (visible in Image mode) -->
+                <div id="image-settings" class="control-subgroup hidden">
+                  <label class="control-label">Background Presets & Upload</label>
+                  <div class="bg-preset-container">
+                    <button type="button" class="bg-preset preset-upload" id="btn-upload-bg" title="Upload custom background">
+                      <i data-lucide="upload"></i>
+                      <input type="file" id="bg-image-input" accept="image/*" class="hidden" />
+                    </button>
+                    <!-- Preset gradients/images -->
+                    <button type="button" class="bg-preset gradient-preset-1" data-preset="gradient-1" title="Sunset Glow"></button>
+                    <button type="button" class="bg-preset gradient-preset-2" data-preset="gradient-2" title="Neon Cyber"></button>
+                    <button type="button" class="bg-preset gradient-preset-3" data-preset="gradient-3" title="Emerald Mist"></button>
+                    <button type="button" class="bg-preset gradient-preset-4" data-preset="gradient-4" title="Soft Studio"></button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Export Controls -->
+              <div class="panel-section divider-top">
+                <h3><i data-lucide="download"></i> Export Options</h3>
+                
+                <div class="control-group">
+                  <label for="export-format" class="control-label">File Format</label>
+                  <select id="export-format" class="select-input">
+                    <option value="image/png">PNG (Lossless, Transparent)</option>
+                    <option value="image/jpeg">JPEG (Compressed, Solid Background)</option>
+                  </select>
+                </div>
+
+                <div class="control-group" id="jpeg-quality-group">
+                  <label for="export-quality" class="control-label">JPEG Quality: <span id="quality-val">90%</span></label>
+                  <input type="range" id="export-quality" min="10" max="100" value="90" class="range-slider" />
+                </div>
+
+                <div class="action-buttons-stack">
+                  <button type="button" id="btn-download" class="btn btn-primary">
+                    <i data-lucide="download"></i> Download Image
+                  </button>
+                  <button type="button" id="btn-copy" class="btn btn-secondary">
+                    <i data-lucide="copy"></i> Copy to Clipboard
+                  </button>
+                  <button type="button" id="btn-reset" class="btn btn-danger">
+                    <i data-lucide="refresh-cw"></i> Start Over
+                  </button>
+                </div>
+              </div>
+            </aside>
+
+            <!-- Viewer & Upload Workspace Area -->
+            <div id="viewer-container" class="viewer-container">
+              
+              <!-- Empty Upload Dropzone -->
+              <div id="dropzone" class="dropzone">
+                <input type="file" id="file-input" accept="image/*" class="hidden" />
+                <div class="dropzone-content">
+                  <div class="icon-pulse">
+                    <i data-lucide="image-plus" class="upload-icon"></i>
+                  </div>
+                  <h3>Select an image to remove background</h3>
+                  <p class="dropzone-help">Drag and drop your file here, or click to browse</p>
+                  <span class="file-limits">Supports PNG, JPG, WEBP up to 10MB</span>
+                </div>
+              </div>
+
+              <!-- Loading / Processing Overlay -->
+              <div id="loading-overlay" class="loading-overlay hidden">
+                <div class="spinner-container">
+                  <div class="glowing-spinner"></div>
+                  <div class="spinner-icon">
+                    <i data-lucide="cpu" class="anim-spin"></i>
+                  </div>
+                </div>
+                <h3 id="loading-status">Downloading AI Model...</h3>
+                <p id="loading-substatus" class="loading-substatus">Initializing local web engine</p>
+                <div class="progress-bar-container">
+                  <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%"></div>
+                </div>
+                <span id="progress-percent" class="progress-percent">0%</span>
+              </div>
+
+              <!-- Image Display / Preview Panel (active when image is processed) -->
+              <div id="preview-panel" class="preview-panel hidden">
+                <div class="canvas-wrapper">
+                  <!-- The main interactive slider element -->
+                  <div id="comparison-slider" class="comparison-slider">
+                    <!-- Background Canvas (will hold the background-removed output + chosen custom backgrounds) -->
+                    <canvas id="output-canvas" class="output-canvas"></canvas>
+                    
+                    <!-- Original Image Container (slid over the output canvas) -->
+                    <div id="original-image-container" class="original-image-container">
+                      <img id="original-image" class="original-image" alt="Original Image" />
+                    </div>
+
+                    <!-- Slider Handle / Divider line -->
+                    <div id="slider-handle" class="slider-handle">
+                      <div class="handle-line"></div>
+                      <div class="handle-button">
+                        <i data-lucide="chevrons-left-right"></i>
+                      </div>
+                    </div>
+
+                    <!-- Mode Indicator Badges -->
+                    <div class="badge original-badge">Original</div>
+                    <div class="badge result-badge">Result</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Feature Cards / Offline Explanation -->
+          <section class="features-section">
+            <div class="feature-card">
+              <div class="feature-icon"><i data-lucide="shield-check"></i></div>
+              <h4>100% Private</h4>
+              <p>Your photos never leave your device. All calculations are done locally in your browser cache.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon"><i data-lucide="sparkles"></i></div>
+              <h4>Local AI Technology</h4>
+              <p>Uses state-of-the-art neural networks compiled via WebAssembly for precision cutout quality.</p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon"><i data-lucide="zap"></i></div>
+              <h4>Free & Unlimited</h4>
+              <p>No subscriptions, no credits, no sign-ups. Process as many images as you want at maximum resolution.</p>
+            </div>
+          </section>
+
+        </div>
+      </main>
+
+      <footer class="app-footer">
+        <p>&copy; 2026 ClearCut AI. Powered by local WASM technology. Created for high privacy image background removal.</p>
+      </footer>
+    </div>
+
+    <!-- Script Entrypoint -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
